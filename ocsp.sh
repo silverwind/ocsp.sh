@@ -16,12 +16,12 @@ awk '{print > "'"$TMP/cert"'" (1+n) ".pem"} /-----END CERTIFICATE-----/ {n++}' <
 # set cert and issuer, get ocsp uri
 CERT="$TMP/cert1.pem"
 ISSUER="$TMP/cert2.pem"
+REQ="$TMP/req"
 URI=$(openssl x509 -in "$CERT" -noout -ocsp_uri)
 
 # create the ocsp request and base64-urlencode it
-openssl ocsp -noverify -no_cert_verify -no_nonce -reqout "$TMP/req" -issuer "$ISSUER" -cert "$CERT" -text 1>/dev/null
-openssl enc -in "$TMP/req" -out "$TMP/req64" -a
-REQ=$(python -c "import sys, urllib; print urllib.quote_plus(sys.argv[1])" $(cat "$TMP/req64" | tr -d "\n"))
+openssl ocsp -noverify -no_cert_verify -no_nonce -reqout "$REQ" -issuer "$ISSUER" -cert "$CERT" -text 1>/dev/null
+REQ=$(python -c "import sys, urllib; print urllib.quote_plus(sys.argv[1])" $(openssl enc -a -in "$REQ" | tr -d "\n"))
 
 # retrieve response and save it
 curl -s "$URI/$REQ" -o "$2"
