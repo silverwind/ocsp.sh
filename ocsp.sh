@@ -29,9 +29,9 @@ REQ=$(python -c "import sys, urllib; print urllib.quote_plus(sys.argv[1])" $(ope
 curl -s "$URI/$REQ" -o "$2"
 
 if [ -z "$3" ]; then
-  openssl ocsp -respin "$2" -issuer "$ISSUER" -verify_other "$3"
-else
   openssl ocsp -respin "$2" -issuer "$ISSUER"
+else
+  openssl ocsp -respin "$2" -issuer "$ISSUER" -verify_other "$3"
 fi
 
 # clean up
