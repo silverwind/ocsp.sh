@@ -5,13 +5,19 @@ Retrieve a OCSP response via curl for a TLS certificate bundle, to be used with 
 Usage
 
 ```
-Usage: ocsp.sh certs.pem res.der
+Usage: ocsp.sh fullchain.pem res.der [chain.pem]
+
+Retrieve a OCSP response via curl for a TLS certificate bundle.
+fullchain.pem is a bundle containing a cert and its signer cert.
+chain.pem should contain signer certs and is used to verify the response.
 ```
 
 Example
 
 ```console
-$ ./ocsp.sh bundle.pem res.der
+$ ./ocsp.sh fullchain.pem res.der
+Response verify OK
+$ ./ocsp.sh fullchain.pem res.der chain.pem
 Response verify OK
 ```
 

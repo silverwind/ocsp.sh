@@ -1,9 +1,11 @@
 #/bin/bash
 
-if [ $# -ne 2 ]; then
-  echo "Usage: $(basename $0) certs.pem res.der"
+if [ $# -ne 2 ] || [ $# -ne 2 ]; then
+  echo "Usage: $(basename $0) fullchain.pem res.der [chain.pem]"
   echo
   echo "Retrieve a OCSP response via curl for a TLS certificate bundle."
+  echo "fullchain.pem is a bundle containing a cert and its signer cert".
+  echo "chain.pem should contain signer certs and is used to verify the response."
   exit 1
 fi
 
@@ -25,7 +27,12 @@ REQ=$(python -c "import sys, urllib; print urllib.quote_plus(sys.argv[1])" $(ope
 
 # retrieve response and save it
 curl -s "$URI/$REQ" -o "$2"
-openssl ocsp -respin "$2" -issuer "$ISSUER"
+
+if [ -z "$3" ]; then
+  openssl ocsp -respin "$2" -issuer "$ISSUER" -verify_other "$3"
+else
+  openssl ocsp -respin "$2" -issuer "$ISSUER"
+fi
 
 # clean up
 rm -rf "$TMP"
