@@ -1,6 +1,6 @@
 #/bin/bash
 
-if [ $# -lt 2 ]; then
+if [ $# -ne 2 ]; then
   echo "Usage: $(basename $0) certs.pem res.der"
   echo
   echo "Retrieve a OCSP response via curl for a TLS certificate bundle."
