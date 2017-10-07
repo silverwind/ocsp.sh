@@ -1,6 +1,6 @@
 #/bin/bash
 
-if [ $# -ne 2 ] || [ $# -ne 2 ]; then
+if [ $# -ne 2 ] && [ $# -ne 3 ]; then
   echo "Usage: $(basename $0) fullchain.pem res.der [chain.pem]"
   echo
   echo "Retrieve a OCSP response via curl for a TLS certificate bundle."
