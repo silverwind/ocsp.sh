@@ -1,4 +1,4 @@
-#/bin/bash
+#/bin/sh
 
 if [ $# -ne 2 ] && [ $# -ne 3 ]; then
   echo "Usage: $(basename $0) fullchain.pem res.der [chain.pem]"
