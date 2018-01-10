@@ -23,7 +23,7 @@ URI=$(openssl x509 -in "$CERT" -noout -ocsp_uri)
 
 # create the ocsp request and base64-urlencode it
 openssl ocsp -noverify -no_cert_verify -no_nonce -reqout "$REQ" -issuer "$ISSUER" -cert "$CERT" -text 1>/dev/null
-REQ=$(python -c "import sys, urllib; print urllib.quote_plus(sys.argv[1])" $(openssl enc -a -in "$REQ" | tr -d "\n"))
+REQ=$(python -c "exec(\"try:\n from urllib import quote_plus\nexcept ImportError:\n from urllib.parse import quote_plus\nimport sys\nprint(quote_plus(sys.argv[1]))\")" $(openssl enc -a -in "$REQ" | tr -d "\n"))
 
 # retrieve response and save it
 curl -s "$URI/$REQ" -o "$2"
