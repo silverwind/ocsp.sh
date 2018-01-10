@@ -1,11 +1,14 @@
 #/bin/sh
 
 if [ $# -ne 2 ] && [ $# -ne 3 ]; then
-  echo "Usage: $(basename $0) fullchain.pem res.der [chain.pem]"
+  echo "Usage: $(basename $0) fullchain.pem ocsp.der [chain.pem]"
   echo
   echo "Retrieve a OCSP response via curl for a TLS certificate bundle."
-  echo "fullchain.pem is a bundle containing a cert and its signer cert".
-  echo "chain.pem should contain signer certs and is used to verify the response."
+  echo
+  echo "Parameters"
+  echo "  fullchain.pem     A TLS certificate bundle containing a cert and its signer cert"
+  echo "  ocsp.der          The output file of the ocsp response"
+  echo "  chain.pem         Additional signer certs used during response verification"
   exit 1
 fi
 
