@@ -1,14 +1,16 @@
-#/bin/sh
+#!/bin/bash
+set -euo pipefail
 
 if [ $# -ne 2 ] && [ $# -ne 3 ]; then
-  echo "Usage: $(basename $0) fullchain.pem ocsp.der [chain.pem]"
-  echo
   echo "Retrieve a OCSP response via curl for a TLS certificate bundle."
   echo
+  echo "Usage:"
+  echo "  $(basename $0) fullchain.pem ocsp.der [chain.pem]"
+  echo
   echo "Parameters"
-  echo "  fullchain.pem     A TLS certificate bundle containing a cert and its signer cert"
-  echo "  ocsp.der          The output file of the ocsp response"
-  echo "  chain.pem         Additional signer certs used during response verification"
+  echo "  fullchain.pem  A TLS certificate bundle containing a cert and its signer cert"
+  echo "  ocsp.der       The output file of the ocsp response"
+  echo "  chain.pem      Additional signer certs used during response verification"
   exit 1
 fi
 
@@ -31,7 +33,7 @@ REQ=$(python -c "exec(\"try:\n from urllib import quote_plus\nexcept ImportError
 # retrieve response and save it
 curl -s "$URI/$REQ" -o "$2"
 
-if [ -z "$3" ]; then
+if [ $# -eq 2 ]; then
   openssl ocsp -respin "$2" -issuer "$ISSUER"
 else
   openssl ocsp -respin "$2" -issuer "$ISSUER" -verify_other "$3"
